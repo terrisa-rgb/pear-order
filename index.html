@@ -1,0 +1,74 @@
+Exit code: 0
+Wall time: 0.6 seconds
+Output:
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>?璇券?鞈潘?蝺?閮頃</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Noto Sans TC', 'sans-serif'] }, colors: { orchard: { 50:'#f0fdf4',100:'#dcfce7',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d' } } } } };
+  </script>
+  <style>
+    body { font-family: 'Noto Sans TC', sans-serif; background: #f8fafc; }
+    input:invalid:not(:placeholder-shown) { border-color: #ef4444; }
+  </style>
+</head>
+<body class="min-h-screen pb-12 text-slate-800">
+  <header class="relative overflow-hidden bg-gradient-to-r from-orchard-900 via-orchard-800 to-emerald-900 px-4 py-10 text-white shadow-lg">
+    <div class="absolute -bottom-12 -right-8 text-9xl opacity-10" aria-hidden="true">??</div>
+    <div class="relative mx-auto max-w-4xl text-center">
+      <span class="inline-block rounded-full bg-yellow-400 px-3 py-1 text-xs font-bold tracking-wider text-slate-900">?? ?Ｗ?湧?圈悅?⊥</span>
+      <h1 class="mt-3 text-3xl font-extrabold tracking-tight md:text-5xl">?璇函?銝?鞈?/h1>
+      <p class="mx-auto mt-3 max-w-xl text-sm font-light text-emerald-100 md:text-base">?湧?嗅迤?璇剁?隞亦拳?箏雿??‵撖怨?鞈潸?閮?嚗????∪翰?蝣箄?閮??/p>
+      <button type="button" onclick="toggleConfig()" class="mt-4 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-emerald-100 transition hover:bg-white/20">??Google 銵典銝脫閮剖?</button>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto -mt-6 max-w-4xl space-y-6 px-4">
+    <form id="orderForm" class="space-y-6">
+      <section class="rounded-2xl border border-slate-100 bg-white p-6 shadow-md">
+        <div class="mb-5 flex items-center gap-3 border-b border-slate-100 pb-4"><span class="grid h-8 w-8 place-items-center rounded-full bg-orchard-100 text-sm font-bold text-orchard-700">1</span><div><h2 class="text-lg font-bold text-slate-900">?豢?璇典?閬</h2><p class="text-xs text-slate-500">瘥拳 12 憿??賊?銝頞??暹?摨怠???/p></div></div>
+        <div id="products" class="grid gap-4 md:grid-cols-3"></div>
+        <p id="productError" class="mt-3 hidden text-xs text-red-500">隢撠??蝞勗???/p>
+      </section>
+
+      <section class="space-y-6 rounded-2xl border border-slate-100 bg-white p-6 shadow-md">
+        <div><div class="mb-4 flex items-center gap-3 border-b border-slate-100 pb-3"><span class="grid h-8 w-8 place-items-center rounded-full bg-orchard-100 text-sm font-bold text-orchard-700">2</span><h2 class="text-lg font-bold text-slate-900">閮頃鈭箄?閮?/h2></div><div class="grid gap-4 md:grid-cols-2"><label class="field">閮頃鈭箏???<span>*</span><input id="buyerName" required placeholder="隢撓?亙??? /></label><label class="field">閮頃鈭粹閰?<span>*</span><input id="buyerPhone" type="tel" required pattern="^09[0-9]{8}$" placeholder="靘?嚗?912345678" /></label></div></div>
+        <div><div class="mb-4 flex items-center justify-between border-b border-slate-100 pb-3"><div class="flex items-center gap-3"><span class="grid h-8 w-8 place-items-center rounded-full bg-orchard-100 text-sm font-bold text-orchard-700">3</span><h2 class="text-lg font-bold text-slate-900">?嗡辣鈭箄?閮?/h2></div><label class="cursor-pointer rounded-lg border border-orchard-100 bg-orchard-50 px-3 py-1.5 text-xs font-medium text-orchard-700"><input id="sameBuyer" type="checkbox" class="mr-1" /> ??鞈潔犖</label></div><div class="grid gap-4 md:grid-cols-2"><label class="field">?嗡辣鈭箏???<span>*</span><input id="recipientName" required placeholder="隢撓?亙??? /></label><label class="field">?嗡辣鈭粹閰?<span>*</span><input id="recipientPhone" type="tel" required pattern="^09[0-9]{8}$" placeholder="靘?嚗?912345678" /></label></div></div>
+      </section>
+
+      <section class="rounded-2xl border border-slate-100 bg-white p-6 shadow-md">
+        <div class="mb-4 flex items-center gap-3 border-b border-slate-100 pb-3"><span class="grid h-8 w-8 place-items-center rounded-full bg-orchard-100 text-sm font-bold text-orchard-700">4</span><h2 class="text-lg font-bold text-slate-900">??閮?/h2></div>
+        <div class="grid gap-4 md:grid-cols-3"><label class="field">撣????<span>*</span><input id="shipDate" type="date" required /></label><label class="field md:col-span-2">?? <span>*</span><input id="address" required placeholder="隢‵撖怠??湔隞嗅?" /></label></div>
+        <label class="field mt-4">?酉嚗憛恬?<textarea id="notes" rows="2" placeholder="靘?嚗靘輯蝯∠??挾????蝑?></textarea></label>
+      </section>
+
+      <section class="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-white shadow-xl"><h2 class="mb-4 border-b border-slate-700 pb-3 font-bold text-emerald-400">?屁 閮??</h2><div id="summary" class="space-y-2 text-sm"><p class="text-slate-400">撠?豢?????/p></div><div class="mt-4 flex items-end justify-between border-t border-slate-700 pt-4"><div class="text-sm text-slate-300">??<b id="totalBoxes" class="text-white">0</b> 蝞?/div><div class="text-right"><p class="text-xs text-slate-400">閮頃蝮賡?</p><p class="text-2xl font-extrabold text-yellow-300">NT$ <span id="totalAmount">0</span></p></div></div><button class="mt-5 w-full rounded-xl bg-orchard-600 py-3 text-sm font-bold transition hover:bg-orchard-700">??頃閮</button></section>
+    </form>
+  </main>
+
+  <div id="configModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/70 p-4"><div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl"><div class="flex items-center justify-between border-b pb-3"><h2 class="font-bold">Google 銵典銝脫閮剖?</h2><button type="button" onclick="toggleConfig()" aria-label="??">??/button></div><p class="my-4 rounded-lg bg-amber-50 p-3 text-xs leading-relaxed text-amber-800">憛怠 Google Form ??<code>formResponse</code> 蝬脣???憿??<code>entry.XXXX</code> 甈? ID?身摰??芸摮?桀??汗?具?/p><div class="space-y-3"><label class="field">Action URL<input data-config="formUrl" type="url" placeholder="https://docs.google.com/forms/d/e/.../formResponse" /></label><div class="grid grid-cols-2 gap-3"><label class="field">閮頃鈭箏???input data-config="buyerName" placeholder="entry.123" /></label><label class="field">閮頃鈭粹閰?input data-config="buyerPhone" placeholder="entry.123" /></label><label class="field">?嗡辣鈭箏???input data-config="recipientName" placeholder="entry.123" /></label><label class="field">?嗡辣鈭粹閰?input data-config="recipientPhone" placeholder="entry.123" /></label><label class="field">???input data-config="shipDate" placeholder="entry.123" /></label><label class="field">??<input data-config="address" placeholder="entry.123" /></label></div><label class="field">閮?敦<input data-config="details" placeholder="entry.123" /></label></div><div class="mt-6 flex justify-end gap-2"><button type="button" onclick="toggleConfig()" class="rounded-lg bg-slate-100 px-4 py-2 text-sm">??</button><button type="button" onclick="saveConfig()" class="rounded-lg bg-orchard-600 px-4 py-2 text-sm font-bold text-white">?脣?閮剖?</button></div></div></div>
+  <div id="successModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/70 p-4"><div class="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-2xl"><div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-100 text-2xl text-emerald-600">??/div><h2 class="mt-4 text-xl font-bold">閮撌脤</h2><p class="mt-2 text-sm text-slate-500">???函??頃嚗????∪翰??舐鼠蝣箄???/p><div id="receipt" class="mt-5 rounded-xl bg-slate-50 p-3 text-left text-xs leading-6 text-slate-600"></div><button type="button" onclick="closeSuccess()" class="mt-5 w-full rounded-lg bg-orchard-600 py-2.5 font-bold text-white">摰?</button></div></div>
+  <style>.field{display:block;font-size:.75rem;font-weight:700;color:#334155}.field span{color:#ef4444}.field input,.field textarea{margin-top:.25rem;width:100%;border:1px solid #e2e8f0;border-radius:.5rem;padding:.55rem .7rem;font-size:.875rem;font-weight:400;outline:none}.field input:focus,.field textarea:focus{border-color:#16a34a;box-shadow:0 0 0 2px #dcfce7}</style>
+  <script>
+    const products = [{id:'22A',name:'蝎暸?璇?22A',price:1570,stock:7,qty:0,description:'???餌迂嚗???瘙?},{id:'24A',name:'?寥?璇?24A',price:1690,stock:13,qty:0,description:'憭折?憌賣遛嚗旨擐??},{id:'26A',name:'???璇?26A',price:1820,stock:4,qty:0,description:'蝔?之?????蝝啁溶??}];
+    let config = JSON.parse(localStorage.getItem('pearOrderGoogleConfig') || '{}');
+    const money = n => n.toLocaleString('zh-TW');
+    function render() { const root=document.querySelector('#products'); root.innerHTML=products.map(p=>`<article class="rounded-xl border-2 ${p.qty?'border-orchard-600 bg-orchard-50/40':'border-slate-100 bg-slate-50/50'} p-4"><div class="flex justify-between"><b class="rounded bg-yellow-100 px-2 py-0.5 text-xs text-amber-800">${p.id} 閬</b><small class="text-slate-500">摨怠? ${p.stock} 蝞?/small></div><h3 class="mt-3 font-bold">${p.name}</h3><p class="mt-1 text-xs text-slate-500">${p.description} 瘥拳 12 憿?/p><p class="my-4 text-xl font-extrabold text-orchard-700">NT$ ${money(p.price)} <small class="text-xs font-normal text-slate-500">/ 蝞?/small></p><div class="flex items-center justify-between rounded-lg border bg-white p-1"><button type="button" onclick="changeQty('${p.id}',-1)" class="h-8 w-8 rounded bg-slate-100 font-bold">??/button><b>${p.qty}</b><button type="button" onclick="changeQty('${p.id}',1)" ${p.qty===p.stock?'disabled':''} class="h-8 w-8 rounded bg-orchard-600 font-bold text-white disabled:bg-slate-200 disabled:text-slate-400">嚗?/button></div></article>`).join(''); const active=products.filter(p=>p.qty); const count=active.reduce((s,p)=>s+p.qty,0), amount=active.reduce((s,p)=>s+p.qty*p.price,0); document.querySelector('#summary').innerHTML=active.length?active.map(p=>`<div class="flex justify-between rounded-lg border border-slate-700 bg-slate-800 p-2.5"><span>${p.name} ? ${p.qty}</span><b class="text-yellow-300">NT$ ${money(p.qty*p.price)}</b></div>`).join(''):'<p class="text-slate-400">撠?豢?????/p>'; document.querySelector('#totalBoxes').textContent=count; document.querySelector('#totalAmount').textContent=money(amount); }
+    function changeQty(id,delta){const p=products.find(x=>x.id===id); p.qty=Math.max(0,Math.min(p.stock,p.qty+delta)); document.querySelector('#productError').classList.add('hidden');render();}
+    function toggleConfig(){const el=document.querySelector('#configModal'); el.classList.toggle('hidden');el.classList.toggle('flex'); if(!el.classList.contains('hidden')) document.querySelectorAll('[data-config]').forEach(e=>e.value=config[e.dataset.config]||'');}
+    function saveConfig(){config={};document.querySelectorAll('[data-config]').forEach(e=>config[e.dataset.config]=e.value.trim());localStorage.setItem('pearOrderGoogleConfig',JSON.stringify(config));toggleConfig();}
+    document.querySelector('#sameBuyer').addEventListener('change',e=>{if(e.target.checked){recipientName.value=buyerName.value;recipientPhone.value=buyerPhone.value;}});
+    document.querySelector('#orderForm').addEventListener('submit',e=>{e.preventDefault();const chosen=products.filter(p=>p.qty);if(!chosen.length){productError.classList.remove('hidden');document.querySelector('#products').scrollIntoView({behavior:'smooth'});return;}const details=chosen.map(p=>`${p.name} ? ${p.qty} 蝞梧?NT$ ${money(p.qty*p.price)}嚗).join('嚗?);const total=chosen.reduce((s,p)=>s+p.qty*p.price,0);const data={buyerName:buyerName.value,buyerPhone:buyerPhone.value,recipientName:recipientName.value,recipientPhone:recipientPhone.value,shipDate:shipDate.value,address:address.value,details:`${details}?蜇憿?NT$ ${money(total)}??閮鳴?${notes.value||'??}`};postToGoogle(data);receipt.innerHTML=`<p><b>閮頃鈭綽?</b>${data.buyerName}嚗?{data.buyerPhone}嚗?/p><p><b>?嗡辣鈭綽?</b>${data.recipientName}嚗?{data.recipientPhone}嚗?/p><p><b>???</b>${data.shipDate}</p><p><b>??嚗?/b>${data.address}</p><p><b>閮頃?批捆嚗?/b>${details}</p><p class="font-bold text-amber-700">蝮賡?嚗T$ ${money(total)}</p>`;successModal.classList.remove('hidden');successModal.classList.add('flex');});
+    function postToGoogle(data){if(!config.formUrl?.includes('formResponse'))return;const f=document.createElement('form');f.action=config.formUrl;f.method='post';f.target='googleFrame';Object.entries(data).forEach(([key,value])=>{if(config[key]){const i=document.createElement('input');i.type='hidden';i.name=config[key];i.value=value;f.appendChild(i);}});document.body.appendChild(f);f.submit();f.remove();}
+    function closeSuccess(){successModal.classList.add('hidden');successModal.classList.remove('flex');products.forEach(p=>p.qty=0);orderForm.reset();shipDate.value=minDate;render();}
+    const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);const minDate=tomorrow.toISOString().slice(0,10);shipDate.min=minDate;shipDate.value=minDate;render();
+  </script><iframe name="googleFrame" class="hidden"></iframe>
+</body></html>
+

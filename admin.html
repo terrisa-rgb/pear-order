@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>甘露梨｜庫存管理</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Noto Sans TC',sans-serif;background:#f8fafc}</style>
+</head>
+<body class="min-h-screen text-slate-800">
+  <header class="bg-gradient-to-r from-emerald-900 to-emerald-700 px-4 py-7 text-white"><div class="mx-auto flex max-w-3xl items-center justify-between"><div><p class="text-xs text-emerald-200">甘露梨預購</p><h1 class="text-2xl font-extrabold">庫存管理</h1></div><a href="index.html" class="rounded-lg border border-white/30 px-3 py-2 text-sm hover:bg-white/10">返回訂購頁</a></div></header>
+  <main class="mx-auto max-w-3xl p-4 md:p-8">
+    <section id="loginCard" class="mx-auto max-w-md rounded-2xl bg-white p-6 shadow-md"><h2 class="text-lg font-bold">管理者登入</h2><p class="mt-2 text-sm leading-6 text-slate-500">輸入管理者 Email 後，我們會寄送一次性登入連結。</p><form id="loginForm" class="mt-5 space-y-4"><label class="block text-sm font-bold">Email<input id="email" type="email" required autocomplete="email" placeholder="you@example.com" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100" /></label><button class="w-full rounded-lg bg-emerald-700 py-2.5 font-bold text-white hover:bg-emerald-800">寄送登入連結</button></form><p id="loginMessage" class="mt-3 text-center text-sm"></p></section>
+    <section id="dashboard" class="hidden"><div class="mb-6 flex items-center justify-between"><div><p class="text-sm text-slate-500">登入帳號：<span id="accountEmail"></span></p><h2 class="text-xl font-bold">目前庫存</h2></div><button id="logout" class="rounded-lg bg-slate-200 px-3 py-2 text-sm font-bold hover:bg-slate-300">登出</button></div><div class="overflow-hidden rounded-2xl bg-white shadow-md"><table class="w-full text-left text-sm"><thead class="bg-slate-50 text-slate-500"><tr><th class="px-5 py-3">規格</th><th class="px-5 py-3">售價</th><th class="px-5 py-3">庫存（箱）</th><th class="px-5 py-3"></th></tr></thead><tbody id="inventoryRows"></tbody></table></div><p id="status" class="mt-4 text-center text-sm"></p></section>
+  </main>
+  <script>
+    const ADMIN_EMAIL = 'terrisatsai@gmail.com';
+    const client = window.supabase.createClient('https://qoxucvdgihrwyjbcngzh.supabase.co', 'sb_publishable_9PBwak0kNSokPLays0axOw_bLyMLjN0');
+    const $ = selector => document.querySelector(selector);
+    const setStatus = (text, good = false) => { $('#status').textContent = text; $('#status').className = `mt-4 text-center text-sm ${good ? 'text-emerald-700' : 'text-red-600'}`; };
+    async function showDashboard() {
+      const { data: { user } } = await client.auth.getUser();
+      if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL) return;
+      $('#loginCard').classList.add('hidden'); $('#dashboard').classList.remove('hidden'); $('#accountEmail').textContent = user.email;
+      const { data, error } = await client.from('products').select('sku,name,price,stock').order('sku');
+      if (error) { setStatus('沒有庫存管理權限。'); return; }
+      $('#inventoryRows').innerHTML = data.map(item => `<tr class="border-t border-slate-100"><td class="px-5 py-4 font-bold">${item.name}</td><td class="px-5 py-4">NT$ ${item.price.toLocaleString()}</td><td class="px-5 py-4"><input id="stock-${item.sku}" type="number" min="0" step="1" value="${item.stock}" class="w-20 rounded-lg border border-slate-200 px-2 py-1.5" /></td><td class="px-5 py-4 text-right"><button onclick="saveStock('${item.sku}')" class="rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-800">儲存</button></td></tr>`).join('');
+    }
+    async function saveStock(sku) {
+      const input = $(`#stock-${sku}`); const stock = Number(input.value);
+      if (!Number.isInteger(stock) || stock < 0) { setStatus('庫存必須是 0 或更大的整數。'); return; }
+      const { error } = await client.from('products').update({ stock, updated_at: new Date().toISOString() }).eq('sku', sku);
+      if (error) { setStatus('儲存失敗：你沒有權限或連線已失效。'); return; }
+      setStatus(`${sku} 庫存已更新為 ${stock} 箱。`, true);
+    }
+    $('#loginForm').addEventListener('submit', async event => {
+      event.preventDefault(); const email = $('#email').value.trim().toLowerCase();
+      if (email !== ADMIN_EMAIL) { $('#loginMessage').textContent = '此 Email 沒有庫存管理權限。'; $('#loginMessage').className = 'mt-3 text-center text-sm text-red-600'; return; }
+      const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: window.location.href } });
+      $('#loginMessage').textContent = error ? '無法寄送登入連結，請稍後再試。' : '登入連結已寄出，請至信箱開啟。';
+      $('#loginMessage').className = `mt-3 text-center text-sm ${error ? 'text-red-600' : 'text-emerald-700'}`;
+    });
+    $('#logout').addEventListener('click', async () => { await client.auth.signOut(); location.reload(); });
+    client.auth.onAuthStateChange(() => showDashboard()); showDashboard();
+  </script>
+</body>
+</html>

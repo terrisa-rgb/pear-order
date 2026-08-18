@@ -24,7 +24,7 @@
       <span class="inline-block rounded-full bg-yellow-400 px-3 py-1 text-xs font-bold tracking-wider text-slate-900">🍃 產地直送・新鮮採收</span>
       <h1 class="mt-3 text-3xl font-extrabold tracking-tight md:text-5xl">甘露梨線上預購</h1>
       <p class="mx-auto mt-3 max-w-xl text-sm font-light text-emerald-100 md:text-base">嚴選當季甘露梨，以箱為單位配送。填寫訂購資訊後，我們將盡快與您確認訂單。</p>
-      <button type="button" onclick="toggleConfig()" class="mt-4 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-emerald-100 transition hover:bg-white/20">⚙ Google 表單串接設定</button>
+      <span class="mt-4 inline-block rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-emerald-100">✓ 訂單會同步至 Google 試算表</span>
     </div>
   </header>
 
@@ -51,14 +51,18 @@
     </form>
   </main>
 
-  <div id="configModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/70 p-4"><div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl"><div class="flex items-center justify-between border-b pb-3"><h2 class="font-bold">Google 表單串接設定</h2><button type="button" onclick="toggleConfig()" aria-label="關閉">✕</button></div><p class="my-4 rounded-lg bg-amber-50 p-3 text-xs leading-relaxed text-amber-800">填入 Google Form 的 <code>formResponse</code> 網址與各題目的 <code>entry.XXXX</code> 欄位 ID。設定會只儲存在目前瀏覽器。</p><div class="space-y-3"><label class="field">Action URL<input data-config="formUrl" type="url" placeholder="https://docs.google.com/forms/d/e/.../formResponse" /></label><div class="grid grid-cols-2 gap-3"><label class="field">訂購人姓名<input data-config="buyerName" placeholder="entry.123" /></label><label class="field">訂購人電話<input data-config="buyerPhone" placeholder="entry.123" /></label><label class="field">收件人姓名<input data-config="recipientName" placeholder="entry.123" /></label><label class="field">收件人電話<input data-config="recipientPhone" placeholder="entry.123" /></label><label class="field">配送日期<input data-config="shipDate" placeholder="entry.123" /></label><label class="field">配送地址<input data-config="address" placeholder="entry.123" /></label></div><label class="field">訂單明細<input data-config="details" placeholder="entry.123" /></label></div><div class="mt-6 flex justify-end gap-2"><button type="button" onclick="toggleConfig()" class="rounded-lg bg-slate-100 px-4 py-2 text-sm">取消</button><button type="button" onclick="saveConfig()" class="rounded-lg bg-orchard-600 px-4 py-2 text-sm font-bold text-white">儲存設定</button></div></div></div>
   <div id="successModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/70 p-4"><div class="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-2xl"><div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-100 text-2xl text-emerald-600">✓</div><h2 class="mt-4 text-xl font-bold">訂單已送出</h2><p class="mt-2 text-sm text-slate-500">感謝您的預購，我們會盡快與您聯繫確認。</p><div id="receipt" class="mt-5 rounded-xl bg-slate-50 p-3 text-left text-xs leading-6 text-slate-600"></div><button type="button" onclick="closeSuccess()" class="mt-5 w-full rounded-lg bg-orchard-600 py-2.5 font-bold text-white">完成</button></div></div>
   <style>.field{display:block;font-size:.75rem;font-weight:700;color:#334155}.field span{color:#ef4444}.field input,.field textarea{margin-top:.25rem;width:100%;border:1px solid #e2e8f0;border-radius:.5rem;padding:.55rem .7rem;font-size:.875rem;font-weight:400;outline:none}.field input:focus,.field textarea:focus{border-color:#16a34a;box-shadow:0 0 0 2px #dcfce7}</style>
   <script>
     const supabaseClient = window.supabase.createClient('https://qoxucvdgihrwyjbcngzh.supabase.co', 'sb_publishable_9PBwak0kNSokPLays0axOw_bLyMLjN0');
     const descriptions = { '22A': '果型勻稱，甜脆多汁。', '24A': '大顆飽滿，送禮首選。', '26A': '稀有大果，口感細緻。' };
     let products = [{id:'22A',name:'精選甘露梨 22A',price:1570,stock:0,qty:0,description:descriptions['22A']},{id:'24A',name:'特選甘露梨 24A',price:1690,stock:0,qty:0,description:descriptions['24A']},{id:'26A',name:'頂級甘露梨 26A',price:1820,stock:0,qty:0,description:descriptions['26A']}];
-    let config = JSON.parse(localStorage.getItem('pearOrderGoogleConfig') || '{}');
+    const config = Object.freeze({
+      formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeFpZPdb_uo18v9DLoSpGkXe18WW5tmPVHpmm1wznClxgP-qQ/formResponse',
+      buyerName: 'entry.288584298', buyerPhone: 'entry.1327426150',
+      recipientName: 'entry.82746427', recipientPhone: 'entry.206580607',
+      shipDate: 'entry.1750773439', address: 'entry.2120558880', details: 'entry.275824115'
+    });
     const money = n => n.toLocaleString('zh-TW');
     function render() { const root=document.querySelector('#products'); root.innerHTML=products.map(p=>`<article class="rounded-xl border-2 ${p.qty?'border-orchard-600 bg-orchard-50/40':'border-slate-100 bg-slate-50/50'} p-4"><div class="flex justify-between"><b class="rounded bg-yellow-100 px-2 py-0.5 text-xs text-amber-800">${p.id} 規格</b><small class="text-slate-500">庫存 ${p.stock} 箱</small></div><h3 class="mt-3 font-bold">${p.name}</h3><p class="mt-1 text-xs text-slate-500">${p.description} 每箱 12 顆</p><p class="my-4 text-xl font-extrabold text-orchard-700">NT$ ${money(p.price)} <small class="text-xs font-normal text-slate-500">/ 箱</small></p><div class="flex items-center justify-between rounded-lg border bg-white p-1"><button type="button" onclick="changeQty('${p.id}',-1)" class="h-8 w-8 rounded bg-slate-100 font-bold">−</button><b>${p.qty}</b><button type="button" onclick="changeQty('${p.id}',1)" ${p.qty===p.stock?'disabled':''} class="h-8 w-8 rounded bg-orchard-600 font-bold text-white disabled:bg-slate-200 disabled:text-slate-400">＋</button></div></article>`).join(''); const active=products.filter(p=>p.qty); const count=active.reduce((s,p)=>s+p.qty,0), amount=active.reduce((s,p)=>s+p.qty*p.price,0); document.querySelector('#summary').innerHTML=active.length?active.map(p=>`<div class="flex justify-between rounded-lg border border-slate-700 bg-slate-800 p-2.5"><span>${p.name} × ${p.qty}</span><b class="text-yellow-300">NT$ ${money(p.qty*p.price)}</b></div>`).join(''):'<p class="text-slate-400">尚未選擇商品。</p>'; document.querySelector('#totalBoxes').textContent=count; document.querySelector('#totalAmount').textContent=money(amount); }
     function changeQty(id,delta){const p=products.find(x=>x.id===id); p.qty=Math.max(0,Math.min(p.stock,p.qty+delta)); document.querySelector('#productError').classList.add('hidden');render();}
@@ -68,8 +72,6 @@
       products = data.map(item => ({ id:item.sku, name:item.name, price:item.price, stock:item.stock, qty:0, description:descriptions[item.sku] || '新鮮產地直送。' }));
       render();
     }
-    function toggleConfig(){const el=document.querySelector('#configModal'); el.classList.toggle('hidden');el.classList.toggle('flex'); if(!el.classList.contains('hidden')) document.querySelectorAll('[data-config]').forEach(e=>e.value=config[e.dataset.config]||'');}
-    function saveConfig(){config={};document.querySelectorAll('[data-config]').forEach(e=>config[e.dataset.config]=e.value.trim());localStorage.setItem('pearOrderGoogleConfig',JSON.stringify(config));toggleConfig();}
     document.querySelector('#sameBuyer').addEventListener('change',e=>{if(e.target.checked){recipientName.value=buyerName.value;recipientPhone.value=buyerPhone.value;}});
     document.querySelector('#orderForm').addEventListener('submit', async e => {
       e.preventDefault();
